@@ -52,6 +52,24 @@ public class GreetingResource {
     }
 
     @GET
+    @Path("test-http-quarkus")
+    public Response quarkusHttpClient() throws MalformedURLException {
+        List<HttpVersion> versions = Arrays.asList(HttpVersion.HTTP_2, HttpVersion.HTTP_1_1);
+        HttpClientOptions options = new HttpClientOptions().setUseAlpn(true).setAlpnVersions(versions);
+        GreetingClient httpVersionClient = QuarkusRestClientBuilder.newBuilder()
+                .baseUrl(URI.create("http://localhost:8080").toURL()).httpClientOptions(options)
+                .build(GreetingClient.class);
+
+        Response response = httpVersionClient.getGreeting();
+        String httpVersion = ((ClientResponseImpl) response).getHttpVersion();
+        if (httpVersion.equals("HTTP_2")) {
+            return response;
+        }
+
+        return Response.ok("The HTTP version should be HTTP_2 but is " + httpVersion).build();
+    }
+
+    @GET
     @Path("test-https-quarkus")
     public Response quarkusHttpsClient() throws MalformedURLException {
         List<HttpVersion> versions = Arrays.asList(HttpVersion.HTTP_1_1, HttpVersion.HTTP_2);

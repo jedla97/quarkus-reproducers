@@ -30,6 +30,15 @@ public class GreetingResourceTest {
     @Test
     public void testHelloEndpoint3() {
         given()
+                .when().get("/test-http-quarkus")
+                .then()
+                .statusCode(200)
+                .body(is("Hello from RESTEasy Reactive"));
+    }
+
+    @Test
+    public void testHelloEndpoint4() {
+        given()
                 .when().get("/test-https-quarkus")
                 .then()
                 .statusCode(200)
