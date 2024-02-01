@@ -5,8 +5,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient
-public interface GreetingClient {
+@RegisterRestClient(configKey = "test-api")
+public interface GreetingClient2 {
 
     @GET
     @Path("/hello")

@@ -9,6 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.client.impl.ClientResponseImpl;
 
 import java.net.MalformedURLException;
@@ -18,6 +19,22 @@ import java.util.List;
 
 @Path("")
 public class GreetingResource {
+
+    @RestClient
+    GreetingClient2 client;
+
+    @GET
+    @Path("test-single")
+    public Response httpClients() {
+
+        Response response = client.getGreeting();
+        String httpVersion = ((ClientResponseImpl) response).getHttpVersion();
+        if (httpVersion.equals("HTTP_2")) {
+            return response;
+        }
+
+        return Response.ok("The HTTP version should be HTTP_2 but is " + httpVersion).build();
+    }
 
     @GET
     @Path("test-http")
