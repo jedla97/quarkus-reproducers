@@ -1,21 +1,24 @@
 package org.acme;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.response.Response;
+import io.vertx.core.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 public class GreetingResourceTest {
 
     @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/hello")
-          .then()
-             .statusCode(200)
-             .body(is("Hello from RESTEasy Reactive"));
+    void testHelloEndpoint() {
+        Response response = given()
+                .when().get("/index.html")
+                .then().extract().response();
+
+        String lastModified = response.header(HttpHeaders.LAST_MODIFIED.toString());
+        assertNotNull(lastModified);
     }
 
 }
